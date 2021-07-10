@@ -20,7 +20,11 @@
               <MenuItem mnemonicParsing="false" onAction="#mnuitemnew_OnAction" text="New" />
                   <MenuItem mnemonicParsing="false" text="Open" />
                   <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Save As" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuSaveAs_OnAction" text="Save As" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false"  onAction="#mnuPageSetup_OnAction" text="Page Setup" />
+
+                  <MenuItem mnemonicParsing="false"  onAction="#mnuPrint_OnAction" text="Print" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -62,7 +66,7 @@
          <children>
             <Button fx:id="btnNext" alignment="CENTER" layoutX="192.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnNext_OnAction" prefHeight="26.0" prefWidth="46.0" text="↑" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <TextField fx:id="txtFind" layoutX="6.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="173.0" promptText="Enter Search Text" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
-            <Button fx:id="btnPrevious" alignment="CENTER" layoutX="238.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnPrevious_OnAction" prefHeight="26.0" prefWidth="46.0" text="↓" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="btnPrevious" alignment="CENTER" layoutX="238.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnPrevious_OnAction" prefHeight="26.0" prefWidth="46.0" text="↓" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
          </children>
       </AnchorPane>
       <TextArea fx:id="txtEditor" layoutX="14.0" layoutY="78.0" prefHeight="200.0" prefWidth="200.0" text="Our mission being “Contributing most capable and reliable software engineers with profound knowledge in most recent technologies who can match up to demands of ever-evolving IT industry”, IJSE has contributed more than 4300 skillful IT professionals occupying many eminent positions in numerous reputed companies in Sri Lanka. IJSE, being one of the leading IT education providers in Sri Lanka has been focusing on enhancing the skills and attitudes which are desperately sought by the IT industry ever since its inception in 2006 with our most exquisite Software Engineering courses in Sri Lanka." wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="75.0">
@@ -73,7 +77,7 @@
          <children>
             <Button fx:id="btnReplace" layoutX="177.0" layoutY="5.0" mnemonicParsing="false" onAction="#btnReplace_OnAction" prefHeight="26.0" prefWidth="80.0" text="Replace" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <Button fx:id="btnReplaceAll" layoutX="257.0" layoutY="5.0" mnemonicParsing="false" onAction="#btnReplaceAll_OnAction" text="Replace All" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
-            <TextField fx:id="txtReplace" layoutY="7.0" prefHeight="26.0" prefWidth="161.0" promptText="Enter Replace Text" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
+            <TextField fx:id="txtReplace" layoutY="7.0" prefHeight="26.0" prefWidth="161.0" promptText="Enter Replace Text" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
          </children>
       </AnchorPane>
    </children>

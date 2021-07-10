@@ -1,10 +1,16 @@
 package Controller;
 
 import javafx.event.ActionEvent;
+import javafx.print.PrinterJob;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,13 +25,16 @@ public class EditorFormController {
     public AnchorPane pneReplace;
     public TextField txtReplace;
 
+    private PrinterJob printerJob;
+
     private int findOffset = -1;
-    private List<Index> searchList = new ArrayList();
+    private final List<Index> searchList = new ArrayList();
     private int searchIndex = 0;
 
     public void initialize(){
         pneFind.setVisible(false);
         pneReplace.setVisible(false);
+        this.printerJob = PrinterJob.createPrinterJob();
         txtFind.textProperty().addListener((observable, oldValue, newValue) -> {
             try{
                 Pattern pattern = Pattern.compile(newValue);
@@ -56,7 +65,7 @@ public class EditorFormController {
                 findOffset = -1;
             }
         } catch (PatternSyntaxException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -154,9 +163,33 @@ public class EditorFormController {
         }
     }
 
+    public void mnuSaveAs_OnAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save File");
+        File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
+        if(file == null){
+            return;
+        }
+
+        try(FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw)){
+                bw.write(txtEditor.getText());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void mnuPageSetup_OnAction(ActionEvent actionEvent) {
+        printerJob.showPageSetupDialog(txtEditor.getScene().getWindow());
+    }
+
+    public void mnuPrint_OnAction(ActionEvent actionEvent) {
+        printerJob.showPrintDialog(txtEditor.getScene().getWindow());
+        printerJob.printPage(txtEditor.lookup("Test"));
+    }
 
 
-    class Index{
+    static class Index{
         int startingIndex;
         int endIndex;
 

@@ -1,6 +1,6 @@
 # Simple Text Editor Application
 
-Text Editor app is a Java Fx Application. You can add any Text and find any word and 
+Text Editor app is a Java Fx Application. You can add any Text and find any word 'find' and replace 'replace' any word related 'find'
 
 ### How to use this repo?
 
