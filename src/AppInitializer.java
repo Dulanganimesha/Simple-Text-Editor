@@ -82,7 +82,7 @@ public class AppInitializer extends Application {
 
         });
     }
-
+//read
     private void loadProperties(){
 
         if(!propFile.exists())

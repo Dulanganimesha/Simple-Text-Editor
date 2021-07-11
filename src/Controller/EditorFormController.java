@@ -2,6 +2,8 @@ package Controller;
 
 import javafx.event.ActionEvent;
 import javafx.print.PrinterJob;
+import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -24,6 +26,9 @@ public class EditorFormController {
     public TextArea txtEditor;
     public AnchorPane pneReplace;
     public TextField txtReplace;
+    public Button btnReplace;
+    public ColorPicker clrPicker;
+    public AnchorPane root;
 
     private PrinterJob printerJob;
 
@@ -186,6 +191,11 @@ public class EditorFormController {
     public void mnuPrint_OnAction(ActionEvent actionEvent) {
         printerJob.showPrintDialog(txtEditor.getScene().getWindow());
         printerJob.printPage(txtEditor.lookup("Test"));
+    }
+
+
+
+    public void clrPicker_OnAction(ActionEvent actionEvent) {
     }
 
 
