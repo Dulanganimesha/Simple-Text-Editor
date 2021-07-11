@@ -2,10 +2,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
 public class AppInitializer extends Application {
 
@@ -23,75 +27,48 @@ public class AppInitializer extends Application {
         Scene mainScene = new Scene(root);
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("Simple Text Editor");
-        loadProperties();
-
-        double xPos;
-        double yPos;
-        double width;
-        double height;
-
-        try{
-            xPos = Double.parseDouble(prop.getProperty("xPos", "-1"));
-            yPos = Double.parseDouble(prop.getProperty("yPos", "-1"));
-        }catch (NumberFormatException e){
-            xPos = -1;
-            yPos = -1;
-        }
-
-        try{
-            width = Double.parseDouble(prop.getProperty("width", "-1"));
-            height = Double.parseDouble(prop.getProperty("height", "-1"));
-        }catch (NumberFormatException e){
-            width = -1;
-            height = -1;
-        }
-
-        if(width == -1 && height == -1){
-            primaryStage.setMaximized(true);
-        }else {
-            primaryStage.setWidth(width);
-            primaryStage.setHeight(height);
-        }
-
-        if(xPos == -1 && yPos == -1){
-            primaryStage.centerOnScreen();
-        }else{
-            primaryStage.setX(xPos);
-            primaryStage.setY(yPos);
-        }
-
-
         primaryStage.show();
 
-        primaryStage.setOnCloseRequest(event -> {
-            prop.put("xPos", primaryStage.getX() + "");
-            prop.put("yPos", primaryStage.getY() + "");
-            if(!primaryStage.isMaximized()){
-                prop.put("width", primaryStage.getWidth() + "");
-                prop.put("height", primaryStage.getHeight() + "");
+        /* Reading preferences for the logged user (Current Logged User on OS) */
+        String color = Preferences.userRoot().node("com.txtedit").get("color", "white");
+        boolean isMaximized = Preferences.userRoot().node("com.txtedit").getBoolean("is-maximized", false);
+        double xPos = Preferences.userRoot().node("com.txtedit").getDouble("x-pos", -1);
+        double yPos = Preferences.userRoot().node("com.txtedit").getDouble("x-pos", -1);
+        double width = Preferences.userRoot().node("com.txtedit").getDouble("width", -1);
+        double height = Preferences.userRoot().node("com.txtedit").getDouble("height", -1);
+
+        /* Setting preferences */
+        root.setBackground(new Background(new BackgroundFill(Color.valueOf(color), null, null)));
+        primaryStage.setMaximized(isMaximized);
+
+        if (!isMaximized){
+            if (width == -1 && height == -1){
+                primaryStage.setWidth(root.getPrefWidth());
+                primaryStage.setHeight(root.getPrefHeight());
             }else{
-                prop.put("width", "-1");
-                prop.put("height", "-1");
+                primaryStage.setWidth(width);
+                primaryStage.setHeight(height);
             }
 
-            try(BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(propFile))){
-                prop.store(bos, null);
-            }catch(IOException e){
-                e.printStackTrace();
+            if (xPos == -1 && yPos == -1){
+                primaryStage.centerOnScreen();
+            }else{
+                primaryStage.setX(xPos);
+                primaryStage.setY(yPos);
             }
+        }
 
+        /* Saving user preferences */
+        primaryStage.setOnCloseRequest(event -> {
+
+            Preferences.userRoot().node("com.txtedit").putBoolean("is-maximized", primaryStage.isMaximized());
+            if (!primaryStage.isMaximized()){
+                Preferences.userRoot().node("com.txtedit").putDouble("x-pos", primaryStage.getX());
+                Preferences.userRoot().node("com.txtedit").putDouble("y-pos", primaryStage.getY());
+                Preferences.userRoot().node("com.txtedit").putDouble("width", primaryStage.getWidth());
+                Preferences.userRoot().node("com.txtedit").putDouble("height", primaryStage.getHeight());
+            }
         });
     }
-//read
-    private void loadProperties(){
 
-        if(!propFile.exists())
-            return;
-
-        try(BufferedInputStream bis = new BufferedInputStream(new FileInputStream(propFile))){
-            prop.load(bis);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
 }

@@ -7,6 +7,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.stage.FileChooser;
 
 import java.io.BufferedWriter;
@@ -15,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -196,6 +199,10 @@ public class EditorFormController {
 
 
     public void clrPicker_OnAction(ActionEvent actionEvent) {
+        root.setBackground(new Background(new BackgroundFill(clrPicker.getValue(), null, null)));
+
+        /* Saving user's color preference */
+        Preferences.userRoot().node("com.txtedit").put("color", clrPicker.getValue().toString());
     }
 
 
