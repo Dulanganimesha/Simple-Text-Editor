@@ -14,13 +14,13 @@
 
 <AnchorPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="695.0" style="-fx-background-color: #b0bec5; -fx-border-width: 2; -fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditorFormController">
    <children>
-      <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="693.0" style="-fx-background-color: #b0bec5; -fx-border-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar fx:id="mnuText" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="693.0" style="-fx-background-color: #b0bec5; -fx-border-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#mnuitemnew_OnAction" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Open" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuItemOpen_OnAction" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuSave_OnAction" text="Save" />
                   <MenuItem mnemonicParsing="false" onAction="#mnuSaveAs_OnAction" text="Save As" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#mnuPageSetup_OnAction" text="Page Setup" />
@@ -30,15 +30,15 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#mnuItemCut_OnAction" text="Cut">
+              <MenuItem mnemonicParsing="false" text="Cut">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#mnuItemCopy_OnAction" text="Copy">
+                  <MenuItem mnemonicParsing="false" text="Copy">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#mnuItemPaste_OnAction" text="Paste">
+                  <MenuItem mnemonicParsing="false" text="Paste">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>

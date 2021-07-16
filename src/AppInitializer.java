@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
@@ -31,13 +32,15 @@ public class AppInitializer extends Application {
 
         /* Reading preferences for the logged user (Current Logged User on OS) */
         String color = Preferences.userRoot().node("com.txtedit").get("color", "white");
+
         boolean isMaximized = Preferences.userRoot().node("com.txtedit").getBoolean("is-maximized", false);
         double xPos = Preferences.userRoot().node("com.txtedit").getDouble("x-pos", -1);
-        double yPos = Preferences.userRoot().node("com.txtedit").getDouble("x-pos", -1);
+        double yPos = Preferences.userRoot().node("com.txtedit").getDouble("y-pos", -1);
         double width = Preferences.userRoot().node("com.txtedit").getDouble("width", -1);
         double height = Preferences.userRoot().node("com.txtedit").getDouble("height", -1);
 
         /* Setting preferences */
+
         root.setBackground(new Background(new BackgroundFill(Color.valueOf(color), null, null)));
         primaryStage.setMaximized(isMaximized);
 

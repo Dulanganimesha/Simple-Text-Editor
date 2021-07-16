@@ -2,8 +2,9 @@ package Controller;
 
 import javafx.event.ActionEvent;
 import javafx.print.PrinterJob;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -11,10 +12,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.stage.FileChooser;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -32,12 +31,16 @@ public class EditorFormController {
     public Button btnReplace;
     public ColorPicker clrPicker;
     public AnchorPane root;
+    public MenuBar mnuText;
 
     private PrinterJob printerJob;
+
+    private FileWriter fileWriter;
 
     private int findOffset = -1;
     private final List<Index> searchList = new ArrayList();
     private int searchIndex = 0;
+    private String filename;
 
     public void initialize(){
         pneFind.setVisible(false);
@@ -85,14 +88,6 @@ public class EditorFormController {
         txtReplace.requestFocus();
     }
 
-    public void mnuItemCut_OnAction(ActionEvent actionEvent) {
-    }
-
-    public void mnuItemCopy_OnAction(ActionEvent actionEvent) {
-    }
-
-    public void mnuItemPaste_OnAction(ActionEvent actionEvent) {
-    }
 
     public void mnuItemFind_OnAction(ActionEvent actionEvent) {
         pneFind.setVisible(true);
@@ -171,9 +166,25 @@ public class EditorFormController {
         }
     }
 
+    public void mnuSave_OnAction(ActionEvent actionEvent) {
+        FileChooser fileChooser1 = new FileChooser();
+        fileChooser1.setTitle("Save File");
+        File file = fileChooser1.showOpenDialog(txtEditor.getScene().getWindow());
+        if(file == null){
+            return;
+        }
+
+        try(FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw)){
+            bw.write(txtEditor.getText());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void mnuSaveAs_OnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save File");
+        fileChooser.setTitle("Save As File");
         File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
         if(file == null){
             return;
@@ -196,13 +207,41 @@ public class EditorFormController {
         printerJob.printPage(txtEditor.lookup("Test"));
     }
 
-
-
     public void clrPicker_OnAction(ActionEvent actionEvent) {
         root.setBackground(new Background(new BackgroundFill(clrPicker.getValue(), null, null)));
+        mnuText.setBackground(new Background(new BackgroundFill(clrPicker.getValue(), null, null)));
 
         /* Saving user's color preference */
         Preferences.userRoot().node("com.txtedit").put("color", clrPicker.getValue().toString());
+
+    }
+
+    public void mnuItemOpen_OnAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Text Files", "*.txt", "*.html"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*"));
+        File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
+
+        if(file == null){
+            return;
+        }
+
+        txtEditor.clear();
+
+        try(FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader)){
+
+            String line = null;
+
+            while((line = bufferedReader.readLine()) != null){
+                txtEditor.appendText(line + '\n');
+
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
 
