@@ -2,19 +2,21 @@ package Controller;
 
 import javafx.event.ActionEvent;
 import javafx.print.PrinterJob;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.stage.FileChooser;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -29,12 +31,14 @@ public class EditorFormController {
     public Button btnReplace;
     public ColorPicker clrPicker;
     public AnchorPane root;
+    public MenuBar mnuText;
 
     private PrinterJob printerJob;
 
     private int findOffset = -1;
     private final List<Index> searchList = new ArrayList();
     private int searchIndex = 0;
+    private String filename;
 
     public void initialize(){
         pneFind.setVisible(false);
@@ -80,6 +84,34 @@ public class EditorFormController {
         txtFind.requestFocus();
         txtReplace.clear();
         txtReplace.requestFocus();
+    }
+
+    public void mnuItemOpen_OnAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Text Files", "*.txt", "*.html"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*"));
+        File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
+
+        if(file == null){
+            return;
+        }
+
+        txtEditor.clear();
+
+        try(FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader)){
+
+            String line = null;
+
+            while((line = bufferedReader.readLine()) != null){
+                txtEditor.appendText(line + '\n');
+
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -160,7 +192,7 @@ public class EditorFormController {
         }
     }
 
-    public void mnuSaveAs_OnAction(ActionEvent actionEvent) {
+    public void mnuSave_OnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save File");
         File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
@@ -169,6 +201,21 @@ public class EditorFormController {
         }
 
         try(FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw)){
+            bw.write(txtEditor.getText());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void mnuSaveAs_OnAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save As File");
+        File file1 = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
+        if(file1 == null){
+            return;
+        }
+
+        try(FileWriter fw = new FileWriter(file1);
             BufferedWriter bw = new BufferedWriter(fw)){
                 bw.write(txtEditor.getText());
         }catch (IOException e){
@@ -188,6 +235,7 @@ public class EditorFormController {
 
 
     public void clrPicker_OnAction(ActionEvent actionEvent) {
+
     }
 
 
