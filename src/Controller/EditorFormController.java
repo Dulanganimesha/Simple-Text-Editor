@@ -52,29 +52,6 @@ public class EditorFormController {
                 findOffset = 0;
             }
         });
-
-         TextArea targetImageView;
-         TextArea sourceImageView;
-
-
-        public void handleDragDetected(MouseEvent dd) {
-            Dragboard db = sourceImageView.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent clipboardContent = new ClipboardContent();
-            clipboardContent.putImage(sourceImageView.getText());
-            db.setContent(clipboardContent);
-            dd.consume();
-        }
-
-        public void handleDragOver(DragEvent dragEvent) {
-            if ( dragEvent.getDragboard().hasImage() )
-                dragEvent.acceptTransferModes(TransferMode.ANY);
-
-        }
-
-        public void handleOnDragDropped(DragEvent dragEvent) {
-            Image img = dragEvent.getDragboard().getImage();
-            targetImageView.setImage(img);
-        }
     }
 
     private void searchMatches(String query) {
