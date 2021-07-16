@@ -82,14 +82,6 @@ public class EditorFormController {
         txtReplace.requestFocus();
     }
 
-    public void mnuItemCut_OnAction(ActionEvent actionEvent) {
-    }
-
-    public void mnuItemCopy_OnAction(ActionEvent actionEvent) {
-    }
-
-    public void mnuItemPaste_OnAction(ActionEvent actionEvent) {
-    }
 
     public void mnuItemFind_OnAction(ActionEvent actionEvent) {
         pneFind.setVisible(true);
