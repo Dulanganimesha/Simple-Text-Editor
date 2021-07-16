@@ -3,16 +3,14 @@ package Controller;
 import javafx.event.ActionEvent;
 import javafx.print.PrinterJob;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.stage.FileChooser;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +21,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class EditorFormController {
 
+    private final List<Index> searchList = new ArrayList();
     public AnchorPane pneFind;
     public TextField txtFind;
     public TextArea txtEditor;
@@ -32,34 +31,53 @@ public class EditorFormController {
     public ColorPicker clrPicker;
     public AnchorPane root;
     public MenuBar mnuText;
-
     private PrinterJob printerJob;
-
     private int findOffset = -1;
-    private final List<Index> searchList = new ArrayList();
-    private int searchIndex = 0;
-    private String filename;
+    private final int searchIndex = 0;
 
-    public void initialize(){
+    public void initialize() {
         pneFind.setVisible(false);
         pneReplace.setVisible(false);
         this.printerJob = PrinterJob.createPrinterJob();
         txtFind.textProperty().addListener((observable, oldValue, newValue) -> {
-            try{
+            try {
                 Pattern pattern = Pattern.compile(newValue);
                 Matcher matcher = pattern.matcher(txtEditor.getText());
                 searchList.clear();
 
-                while(matcher.find()){
+                while (matcher.find()) {
                     searchList.add(new Index(matcher.start(), matcher.end()));
                 }
-            }catch(PatternSyntaxException e){
+            } catch (PatternSyntaxException e) {
                 findOffset = 0;
             }
         });
+
+         TextArea targetImageView;
+         TextArea sourceImageView;
+
+
+        public void handleDragDetected(MouseEvent dd) {
+            Dragboard db = sourceImageView.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent clipboardContent = new ClipboardContent();
+            clipboardContent.putImage(sourceImageView.getText());
+            db.setContent(clipboardContent);
+            dd.consume();
+        }
+
+        public void handleDragOver(DragEvent dragEvent) {
+            if ( dragEvent.getDragboard().hasImage() )
+                dragEvent.acceptTransferModes(TransferMode.ANY);
+
+        }
+
+        public void handleOnDragDropped(DragEvent dragEvent) {
+            Image img = dragEvent.getDragboard().getImage();
+            targetImageView.setImage(img);
+        }
     }
 
-    private void searchMatches(String query){
+    private void searchMatches(String query) {
         try {
             Pattern regExp = Pattern.compile(query);
             Matcher matcher = regExp.matcher(txtEditor.getText());
@@ -70,7 +88,7 @@ public class EditorFormController {
                 searchList.add(new Index(matcher.start(), matcher.end()));
             }
 
-            if (searchList.isEmpty()){
+            if (searchList.isEmpty()) {
                 findOffset = -1;
             }
         } catch (PatternSyntaxException e) {
@@ -82,36 +100,10 @@ public class EditorFormController {
 
         txtFind.clear();
         txtFind.requestFocus();
+        txtEditor.clear();
+        txtEditor.requestFocus();
         txtReplace.clear();
         txtReplace.requestFocus();
-    }
-
-    public void mnuItemOpen_OnAction(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Text Files", "*.txt", "*.html"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*"));
-        File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
-
-        if(file == null){
-            return;
-        }
-
-        txtEditor.clear();
-
-        try(FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader)){
-
-            String line = null;
-
-            while((line = bufferedReader.readLine()) != null){
-                txtEditor.appendText(line + '\n');
-
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
     }
 
 
@@ -146,28 +138,28 @@ public class EditorFormController {
 //            txtEditor.selectRange(start, start + search.length());
 //        }
 
-        if(!searchList.isEmpty()){
-            if(findOffset == -1){
+        if (!searchList.isEmpty()) {
+            if (findOffset == -1) {
                 findOffset = 0;
             }
             txtEditor.selectRange(searchList.get(findOffset).startingIndex, searchList.get(findOffset).endIndex);
 
             findOffset++;
-            if(findOffset >= searchList.size()){
+            if (findOffset >= searchList.size()) {
                 findOffset = 0;
             }
         }
     }
 
     public void btnPrevious_OnAction(ActionEvent actionEvent) {
-        if(!searchList.isEmpty()){
-            if(findOffset == -1){
+        if (!searchList.isEmpty()) {
+            if (findOffset == -1) {
                 findOffset = searchList.size() - 1;
             }
         }
         txtEditor.selectRange(searchList.get(findOffset).startingIndex, searchList.get(findOffset).endIndex);
         findOffset--;
-        if(findOffset<0){
+        if (findOffset < 0) {
             findOffset = searchList.size() - 1;
         }
 
@@ -193,32 +185,33 @@ public class EditorFormController {
     }
 
     public void mnuSave_OnAction(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save File");
-        File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
-        if(file == null){
+        FileChooser fileChooser1 = new FileChooser();
+        fileChooser1.setTitle("Save File");
+        File file = fileChooser1.showOpenDialog(txtEditor.getScene().getWindow());
+        if (file == null) {
             return;
         }
 
-        try(FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw)){
+        try (FileWriter fw = new FileWriter(file);
+             BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(txtEditor.getText());
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public void mnuSaveAs_OnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save As File");
-        File file1 = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
-        if(file1 == null){
+        File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
+        if (file == null) {
             return;
         }
 
-        try(FileWriter fw = new FileWriter(file1);
-            BufferedWriter bw = new BufferedWriter(fw)){
-                bw.write(txtEditor.getText());
-        }catch (IOException e){
+        try (FileWriter fw = new FileWriter(file);
+             BufferedWriter bw = new BufferedWriter(fw)) {
+            bw.write(txtEditor.getText());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -232,14 +225,45 @@ public class EditorFormController {
         printerJob.printPage(txtEditor.lookup("Test"));
     }
 
-
-
     public void clrPicker_OnAction(ActionEvent actionEvent) {
+        root.setBackground(new Background(new BackgroundFill(clrPicker.getValue(), null, null)));
+        mnuText.setBackground(new Background(new BackgroundFill(clrPicker.getValue(), null, null)));
+
+        /* Saving user's color preference */
+        Preferences.userRoot().node("com.txtedit").put("color", clrPicker.getValue().toString());
+
+    }
+
+    public void mnuItemOpen_OnAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Text Files", "*.txt", "*.html"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*"));
+        File file = fileChooser.showOpenDialog(txtEditor.getScene().getWindow());
+
+        if (file == null) {
+            return;
+        }
+
+        txtEditor.clear();
+
+        try (FileReader fileReader = new FileReader(file);
+             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+
+            String line = null;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                txtEditor.appendText(line + '\n');
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
 
-    static class Index{
+    static class Index {
         int startingIndex;
         int endIndex;
 
