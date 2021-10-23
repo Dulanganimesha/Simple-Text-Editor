@@ -3,9 +3,6 @@ package Controller;
 import javafx.event.ActionEvent;
 import javafx.print.PrinterJob;
 import javafx.scene.control.*;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -22,6 +19,7 @@ import java.util.regex.PatternSyntaxException;
 public class EditorFormController {
 
     private final List<Index> searchList = new ArrayList();
+    private final int searchIndex = 0;
     public AnchorPane pneFind;
     public TextField txtFind;
     public TextArea txtEditor;
@@ -33,7 +31,6 @@ public class EditorFormController {
     public MenuBar mnuText;
     private PrinterJob printerJob;
     private int findOffset = -1;
-    private final int searchIndex = 0;
 
     public void initialize() {
         pneFind.setVisible(false);
