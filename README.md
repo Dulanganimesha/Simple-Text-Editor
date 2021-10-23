@@ -6,7 +6,7 @@ Text Editor app is a Java Fx Application. You can add any Text and find any word
 
 1. Clone the repository first  'git clone'
 
-``git@github.com:Direct-Entry-Program-Dulanga/TextEditor.git``
+``git clone https://github.com/Dulanganimesha/Simple-Text-Editor.git``
 
 2. Once cloned, open the repository from the IntelliJ IDEA
 
